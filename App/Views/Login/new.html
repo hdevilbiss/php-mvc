@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+
+<h1>Login</h1>
+
+<form method="post" action="/login/create">
+    <div>
+        <label for="inputEmail">Email address</label>
+        <input type="email" id="inputEmail" name="email" placeholder="Email address" value="{{ email }}" autofocus />
+    </div>
+    <div>
+        <label for="inputPassword">Password</label>
+        <input type="password" id="inputPassword" name="password" placeholder="Password" />
+    </div>
+    <div>
+        <label>
+            <input type="checkbox" name="remember_me" {% if remember_me %} checked="checked" {% endif %} /> Remember me
+        </label>
+    </div>
+    
+    <button type="submit">Login</button>
+</form>
+
+
+{% endblock %}

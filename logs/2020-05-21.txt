@@ -1,0 +1,17 @@
+[21-May-2020 05:14:25 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'No route was matched.'
+Stack trace: #0 D:\xampp\htdocs\public\index.php(50): Core\Router->dispatch('products/')
+#1 {main}
+Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 90
+[21-May-2020 05:15:14 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'No route was matched.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(50): Core\Router->dispatch('products/')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 90
+[21-May-2020 05:45:00 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'No route was matched.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(50): Core\Router->dispatch('products/')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 90
+[21-May-2020 05:45:24 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'Method neeAction not found in controller App\Controllers\Posts'.
+ Stack trace: #0 D:\xampp\htdocs\Core\Router.php(74): Core\Controller->__call('nee', Array)
+#1 D:\xampp\htdocs\public\index.php(50): Core\Router->dispatch('posts/nee')
+#2 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Controller.php' on line 26

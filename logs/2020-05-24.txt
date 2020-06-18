@@ -1,0 +1,49 @@
+[24-May-2020 00:04:26 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'No route was matched.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(52): Core\Router->dispatch('favicon.ico')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 90
+[24-May-2020 00:04:29 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'No route was matched.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(52): Core\Router->dispatch('posts/')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 90
+[24-May-2020 00:04:35 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'No route was matched.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(52): Core\Router->dispatch('post')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 90
+[24-May-2020 00:04:38 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'No route was matched.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(52): Core\Router->dispatch('posts/')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 90
+[24-May-2020 00:04:52 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'No route was matched.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(52): Core\Router->dispatch('products/')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 90
+[24-May-2020 00:07:09 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'No route was matched.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(52): Core\Router->dispatch('posts/')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 90
+[24-May-2020 00:07:15 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'Method newAction not found in controller App\Controllers\Posts'.
+ Stack trace: #0 D:\xampp\htdocs\Core\Router.php(74): Core\Controller->__call('new', Array)
+#1 D:\xampp\htdocs\public\index.php(52): Core\Router->dispatch('posts/new')
+#2 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Controller.php' on line 26
+[24-May-2020 00:26:41 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'Method editAction was not found in controller App\Controllers\Posts.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(52): Core\Router->dispatch('posts/123/editA...')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 80
+[24-May-2020 00:29:46 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'Controller class App\Controllers\Users was not found.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(52): Core\Router->dispatch('admin/users/ind...')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 85
+[24-May-2020 00:41:45 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'Controller class App\Controllers\Admin was not found.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(23): Core\Router->dispatch('admin/index')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 85
+[24-May-2020 00:46:43 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'No route was matched.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(23): Core\Router->dispatch('dashboard/')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 90
+[24-May-2020 00:46:43 Europe/Berlin] Uncaught Exception: 'Exception' with message: 'No route was matched.'.
+ Stack trace: #0 D:\xampp\htdocs\public\index.php(23): Core\Router->dispatch('favicon.ico')
+#1 {main}.
+ Thrown in 'D:\xampp\htdocs\Core\Router.php' on line 90
