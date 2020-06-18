@@ -73,10 +73,11 @@ Inspect the calling object, $this, and depending on a series of IF statements, a
 The Views sub-directories organize the HTML template files that create the website front-end. All templates inherit from the base template. Additionally, there are templates used when 404 and 500 HTTP status codes are sent from the Core\Error class using ```http_response_code($code)```.
 
 The main View subdirectories are listed here.
-* Admin
-* Home
-* Posts
-* Signup
+* Admin		*Work-in-progress*
+* Home		*Home page*
+* Posts		*View all posts*
+* Signup	*Create a new user record*
+* Password	*Reset a forgotten password*
 
 Templates are rendered using renderTemplate method of the [Twig 3.0](https://twig.symfony.com/) templating engine.
 
@@ -84,12 +85,12 @@ Templates are rendered using renderTemplate method of the [Twig 3.0](https://twi
 
 ### CONTROLLERS
 
-Controllers are classes which extend the Core\Controller class. Controllers have a number of methods which are called actions. Controllers, actions, and optional information (such as post ID's) are pulled from dispatched routes; e.g., http://localhost/posts/123/open
+Controllers are classes which extend the Core\Controller class. Controllers have a number of methods which are called actions. Controllers, actions, and optional information (such as post ID's) are pulled from dispatching routes; e.g., http://localhost/posts/123/open
 
 
 #### Home Controller
 
-Given an empty query string (localhost/), the Home controller renders the home page from View\Home\index.html.
+Given an empty query string (http://localhost/), the Home controller renders the home page from View\Home\index.html.
 
 **Home Controller Methods**
 * before() ```@param void @return void```
@@ -98,6 +99,16 @@ This is an optional action filter which can be used before rendering the templat
 This is an optional action filter to run after rendering the template.
 * indexAction() ```@param void @return void```
 ```View::renderTemplate('Home/index.html')```
+
+#### Password Controller
+
+The Password Controller, which extends the Core Controller, is in charge of rendering the reset password form.
+
+**Password Controller Methods**
+* forgotAction() ```@param void @return void```
+Render the Password/forgot View.
+* requestResetAction() ```@param void @return void```
+Deal with the reset password form in POST.
 
 
 #### Posts Controller

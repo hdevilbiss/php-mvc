@@ -147,6 +147,19 @@ class User extends \Core\Model {
         return false;
     }
 
+    /* METHOD: sendPasswordreset
+    * @param string     : $email to reset
+    * @return void      : Search for the email and pull up that User object; otherwise, the search will return false
+    */
+    public static function sendPasswordReset($email) {
+        $user = static::findByEmail($email);
+
+        if ($user) {
+            //Start password reset process
+            //...
+        }
+    }
+
     /* METHOD: validate
     *   @param void     :
     *   @return void    :   Populate the errors[] array of the calling User object as needed
