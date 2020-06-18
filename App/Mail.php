@@ -19,8 +19,6 @@ class Mail {
         $mailgun = Mailgun::create(Config::MAILGUN_API_KEY);//private API key
         $domain = Config::MAILGUN_DOMAIN;
 
-        $mailgun->domains()->verify($domain);
-
         //Compose and send message
         $mailgun->messages()->send($domain,array(
             'from'=>'bob@example.com',

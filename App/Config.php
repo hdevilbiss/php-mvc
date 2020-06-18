@@ -18,6 +18,8 @@ class Config {
 
     const MAILGUN_API_KEY = "9823411da57a386f1716fedfee173e6b-1b6eb03d-f22fe226";
 
-    const MAILGUN_DOMAIN = "https://api.mailgun.net/v3/sandbox1281fef04dcc4cb08c67e76152cd0664.mailgun.org";
+    const MAILGUN_DOMAIN = "sandbox1281fef04dcc4cb08c67e76152cd0664.mailgun.org";
+
+    const MAILGUN_TEST_EMAIL = 'devilbisswebservices@gmail.com';
 }
 ?>

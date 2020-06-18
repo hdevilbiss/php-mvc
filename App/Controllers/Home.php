@@ -23,7 +23,7 @@ class Home extends \Core\Controller {
     */
     public function indexAction() {
         /* Test Mailgun */
-        \App\Mail::send('hannah.031425@gmail.com','Test','This is a test','<h1>This is a test</h1>');
+        //\App\Mail::send(\App\Config::MAILGUN_TEST_EMAIL,'Test','This is a test','<h1>This is a test</h1>');
         
         /* Render Template Using Twig */
         View::renderTemplate('Home/index.html',[]);
