@@ -8,11 +8,16 @@
     <body>
         <nav>
             <a href="/">Home</a> |
+            {% if current_user %}
+                <a href="/logout">Log out</a> |
+                <a href="/profile/index">Your Profile</a> |
+                <a href="/goals/index">Your Goals</a> |
+            {% else %}
+                <a href="/signup/new">Sign Up</a> |
+                <a href="/login/new">Login</a> |
+            {% endif %}
             <a href="/posts/index">Posts</a> |
-            <a href="/admin/users/index">Admin</a> |
-            <a href="/signup/new">Sign Up</a> |
-            <a href="/login/new">Login</a> |
-            <a href="/profile/index">Your Profile</a>
+            <a href="/admin/users/index">Admin</a>      
         </nav>
 
         {% for message in flash_messages %}
