@@ -7,6 +7,7 @@ use PDO;
 /* RememberedLogin model */
 class RememberedLogin extends \Core\Model {
 
+    
     /* METHOD, delete
     * @param void   :
     * @return void  : Delete the corresponding record in the DB
@@ -19,6 +20,7 @@ class RememberedLogin extends \Core\Model {
         $stmt->execute();
     }
     
+
     /* METHOD, findByToken (@param string, @return mixed)
     Given the remember login token, return the Login object or false.*/
     public static function findByToken($token) {

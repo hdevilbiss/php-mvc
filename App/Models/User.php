@@ -2,11 +2,13 @@
 namespace App\Models;
 use PDO;
 use \App\Token;
+use \App\Mail;
 
 /* User Model */
 class User extends \Core\Model {
     /* Array to save error messages */
     public $errors = [];
+
 
     /* MAGIC METHOD: __construct
     *   @param array    :   $data from $_POST (optional)
@@ -18,6 +20,7 @@ class User extends \Core\Model {
             $this->$key = $value;
         }
     }
+
 
     /* METHOD: authenticate
     *   @param string   :   $email from login form
@@ -37,6 +40,7 @@ class User extends \Core\Model {
         return false;
     }
 
+
     /* METHOD: emailExists
     *   @param string   :   $email from login form
     *   @return boolean :   Search for $email in the DB (unique index) using a custom, static User method
@@ -45,6 +49,7 @@ class User extends \Core\Model {
         //returns true if the static User method returns a User object
         return static::findByEmail($email) !== false;
     }
+
 
     /* METHOD: findByEmail
     *   @param string   :   $email from a user input
@@ -67,6 +72,7 @@ class User extends \Core\Model {
         return $stmt->fetch();//fetch returns false if nothing is found
     }
 
+
     /* METHOD: findByID
     *   @param $string  :   The $user user_id
     *   @return mixed   :   User object if found; otherwise false
@@ -84,6 +90,7 @@ class User extends \Core\Model {
 
         return $stmt->fetch();
     }
+
 
     /* METHOD: rememberLogin
     *   @param void         :
@@ -116,6 +123,7 @@ class User extends \Core\Model {
         return $stmt->execute();
     }
 
+
     /* METHOD: save
     *   @param void     : 
     *   @return boolean :   Save form data to the database
@@ -147,6 +155,7 @@ class User extends \Core\Model {
         return false;
     }
 
+
     /* METHOD: sendPasswordreset
     * @param string     : $email to reset
     * @return void      : Search for the email and pull up that User object; otherwise, the search will return false
@@ -155,9 +164,52 @@ class User extends \Core\Model {
         $user = static::findByEmail($email);
 
         if ($user) {
-            //Start password reset process
-            //...
+            if ($user->startPasswordReset()) {
+                // Send email to the $user
+                $user->sendPasswordResetEmail();
+            }
         }
+    }
+
+
+    /* METHOD, sendPasswordResetEmail
+    * @param void       :
+    * @return void      : Send an email to the $user with reset instructions
+    */
+    protected function sendPasswordResetEmail() {
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/password/reset/' . $this->password_reset_token;
+
+        $text = "Please click on the following link to reset your password (or copy+paste to your browser): $url.";
+        $html = "Please click <a href=\"$url\">here</a> to reset your password.";
+
+        Mail::send($this->user_email,'Password reset',$text,$html);
+    }
+
+
+    /* METHOD, startPasswordReset
+    * @param void       :
+    * @return boolean   : Does the statement execute?
+    */
+    protected function startPasswordReset() {
+        //Generate a new Token hash and expiry date
+        $token = new Token();
+        $hashed_token = $token->getHash();
+
+        //Save the token value (to be emailed to the user)
+        $this->password_reset_token = $token->getValue();
+        $expiry_timestamp = time() + 60 * 60 * 2;//2 hours in future
+
+        //Update the user record
+        $sql = 'UPDATE users SET password_reset_hash = :token_hash, password_reset_expiry = :expires_at WHERE user_id=:id';
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        //Bind parameters
+        $stmt->bindValue(":token_hash",$hashed_token,PDO::PARAM_STR);
+        $stmt->bindValue(":expires_at",date('Y:m:d H:i:s',$expiry_timestamp),PDO::PARAM_STR);
+        $stmt->bindValue(":id",$this->user_id,PDO::PARAM_INT);//id comes from the User object
+
+        return $stmt->execute();
     }
 
     /* METHOD: validate
