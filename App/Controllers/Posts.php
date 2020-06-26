@@ -5,17 +5,6 @@ use \Core\View;
 use App\Models\Post;
 
 class Posts extends \Core\Controller {
-    /*
-    $controller = new Posts()
-    $controller->index()
-    Method "index" is not found, and __call is defined for the Posts controller; therefore, $controller->__call("index","") happens instead
-    
-    public function __call($name,$args) {
-        echo 'Hello from the __call magic method in the Posts controller!';
-        echo 'This code runs before call_user_func_array.';
-        call_user_func_array([$this,"$nameAction"],$args);
-        echo 'This code runs after call_user_func_array.';
-    }*/
     
     public function addNewAction() {
         echo 'Hello from the addNew action inside the Posts controller!';
