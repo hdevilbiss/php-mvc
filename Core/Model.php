@@ -4,7 +4,7 @@ namespace Core;
 use PDO;
 use App\Config;
 /* 
-*   Base Model
+*   Base Model      : Make a database connection
 */
 
 abstract class Model {
