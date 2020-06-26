@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Your Goals{% endblock %}
+
+{% block body %}
+
+<h1>All Your Goals</h1>
+
+<!-- If someone is logged in and they have goals, then display them -->
+{% if current_user %}
+    {% if goals %}
+    <!-- List goals -->
+    {% else %}
+    <!-- You have not made any goals yet... Would you like to <a href="/goals/new>make one</a> now?-->
+{% else %}
+    <!-- Hey, you'll need to login before you can view this page. -->
+{% endif %}
+
+{% endblock %}
