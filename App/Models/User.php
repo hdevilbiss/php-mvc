@@ -3,6 +3,7 @@ namespace App\Models;
 use PDO;
 use \App\Token;
 use \App\Mail;
+use \Core\View;
 
 /* User Model */
 class User extends \Core\Model {
@@ -34,6 +35,7 @@ class User extends \Core\Model {
         if ($user) {
             // Verify password
             if (password_verify($password,$user->user_password_hash)) {
+                //If the provided password hash matches password hash from the database, then return the User object
                 return $user;
             }
         }
@@ -53,7 +55,7 @@ class User extends \Core\Model {
 
     /* METHOD: findByEmail
     *   @param string   :   $email from a user input
-    *   @return mixed   :   Either returns a
+    *   @return mixed   :   User object instance or false
     */
     public static function findByEmail($email) {
         //Parametrized query
@@ -69,7 +71,7 @@ class User extends \Core\Model {
         //get_called_class returns the name of the class that the static method (findByEmail) is called in
 
         $stmt->execute();
-        return $stmt->fetch();//fetch returns false if nothing is found
+        return $stmt->fetch();//fetch returns either a User object, or false if no records
     }
 
 
@@ -101,19 +103,15 @@ class User extends \Core\Model {
         $token = new Token();
         $hashed_token = $token->getHash();
 
-        //Save the value and expiration date for later cookie setting
+        //Save the value and expiration date (to local User model?)
         $this->remember_token = $token->getValue();
         $this->expiry_timestamp = time() + 60 * 60 *24 * 30;//30 days
 
-        // Prepare DB connection
-        $sql = 'INSERT INTO rememberedlogins (token_hash,user_id,expires_at) VALUES (:token_hash,:user_id,:expires_at)';
+        // Prepare DB query and connection
+        $sql = 'INSERT INTO rememberedlogins (token_hash,user_id,expires_at) 
+        VALUES (:token_hash,:user_id,:expires_at)';
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-
-        if (\App\Config::SHOW_ERRORS===true) {
-            echo "$this->expiry_timestamp<br>";
-            echo date('Y-m-d H:i:s',$this->expiry_timestamp);
-        }
 
         // Bind values
         $stmt->bindValue(':token_hash',$hashed_token,PDO::PARAM_STR);
@@ -179,10 +177,20 @@ class User extends \Core\Model {
     protected function sendPasswordResetEmail() {
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/password/reset/' . $this->password_reset_token;
 
-        $text = "Please click on the following link to reset your password (or copy+paste to your browser): $url.";
-        $html = "Please click <a href=\"$url\">here</a> to reset your password.";
+        $text = View::getTemplate('Password/reset_email.txt',[
+            'url' => $url
+            ]);
+        
+        $html = View::getTemplate('Password/reset_email.html',[
+            'url'=>$url
+        ]);
 
-        Mail::send($this->user_email,'Password reset',$text,$html);
+        Mail::send(
+            $this->user_email,//$email
+            'Password reset',//$subject
+            $text,//$text
+            $html//$html
+        );
     }
 
 
