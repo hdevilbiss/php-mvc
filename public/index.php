@@ -25,11 +25,28 @@ $router->add('{controller}/{action}');
 $router->add('{controller}/{id:\d+}/{action}');
 
 //Admin namespace
-$router->add('admin/{controller}/{action}',['namespace'=>'Admin']);
+$router->add(
+    'admin/{controller}/{action}',
+    [
+    'namespace'=>'Admin'
+    ]
+);
 
 //Login
-$router->add('login',['controller'=>'Login','action'=>'new']);
-$router->add('logout',['controller'=>'Login','action'=>'destroy']);
+$router->add(
+    'login',
+    [
+        'controller'=>'Login',
+        'action'=>'new'
+        ]
+    );
+$router->add(
+    'logout',
+    [
+        'controller'=>'Login',
+        'action'=>'destroy'
+        ]
+    );
 
 //Reset Password using hexdex token
 $router->add(
