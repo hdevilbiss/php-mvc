@@ -27,5 +27,16 @@ class Password extends \Core\Controller {
 
         View::renderTemplate('Password/reset_confirmation.html');
     }
+
+    /* METHOD, resetAction
+    * @param void   :
+    * @return void  :
+    */
+    public function resetAction() {
+        //Get the hexdex token from the route $params array
+        $token = $this->route_params['token'];
+
+        
+    }
 }
 ?>

@@ -31,6 +31,15 @@ $router->add('admin/{controller}/{action}',['namespace'=>'Admin']);
 $router->add('login',['controller'=>'Login','action'=>'new']);
 $router->add('logout',['controller'=>'Login','action'=>'destroy']);
 
+//Reset Password using hexdex token
+$router->add(
+    'password/reset/{token:[\da-f]+}',
+    [
+        'controller' => 'Password',
+        'action' => 'reset'
+    ]
+);
+
 //var_dump($router->getRoutes());
 
 /* DISPATCH THE CURRENT URL */
