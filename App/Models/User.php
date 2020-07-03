@@ -94,6 +94,39 @@ class User extends \Core\Model {
     }
 
 
+    /* METHOD, findByPasswordReset
+    * @param string     : Password reset hexdex token
+    * @return mixed     : User object or false
+    */
+    public static function findByPasswordReset($token) {
+        //Create a token object and hash it
+        $token = new Token($token);
+        $hashed_token = $token->getHash();
+
+        //Prepare the SQL query
+        $sql = 'SELECT * FROM users
+                WHERE password_reset_hash = :hashed_token';
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        //Bind the hashed token from the URL to the SQL param
+        $stmt->bindValue(':hashed_token',$hashed_token,PDO::PARAM_STR);
+
+        //Fetch the $user record as a class if a matching hashed token is found in the database
+        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        if ($user) {
+            //Is the token expired?
+            if (strtotime($user->password_reset_expiry) > time()) {
+                //Yes, return the user object
+                return $user;
+            }
+        }
+    }
+
+
     /* METHOD: rememberLogin
     *   @param void         :
     *   @return boolean     :   Save a new row in the rememberedLogins table
@@ -175,7 +208,7 @@ class User extends \Core\Model {
     * @return void      : Send an email to the $user with reset instructions
     */
     protected function sendPasswordResetEmail() {
-        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/password/reset/' . $this->password_reset_token;
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/password/reset/' . $this->password_reset_hash;
 
         $text = View::getTemplate('Password/reset_email.txt',[
             'url' => $url
@@ -204,17 +237,19 @@ class User extends \Core\Model {
         $hashed_token = $token->getHash();
 
         //Save the token value (to be emailed to the user)
-        $this->password_reset_token = $token->getValue();
+        $this->password_reset_hash = $token->getValue();
         $expiry_timestamp = time() + 60 * 60 * 2;//2 hours in future
 
         //Update the user record
-        $sql = 'UPDATE users SET password_reset_hash = :token_hash, password_reset_expiry = :expires_at WHERE user_id=:id';
+        $sql = 'UPDATE users
+                SET password_reset_hash = :hashed_token, password_reset_expiry = :expiry_timestamp
+                WHERE user_id=:id';
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
         //Bind parameters
-        $stmt->bindValue(":token_hash",$hashed_token,PDO::PARAM_STR);
-        $stmt->bindValue(":expires_at",date('Y:m:d H:i:s',$expiry_timestamp),PDO::PARAM_STR);
+        $stmt->bindValue(":hashed_token",$hashed_token,PDO::PARAM_STR);
+        $stmt->bindValue(":expiry_timestamp",date('Y:m:d H:i:s',$expiry_timestamp),PDO::PARAM_STR);
         $stmt->bindValue(":id",$this->user_id,PDO::PARAM_INT);//id comes from the User object
 
         return $stmt->execute();
