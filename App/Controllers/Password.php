@@ -16,6 +16,7 @@ class Password extends \Core\Controller {
         View::renderTemplate('Password/forgot.html');
     }
 
+
     /* METHOD, requestResetAction
     * @param void   :
     * @return void  : Send the password reset link to the supplied email from POST
@@ -28,14 +29,17 @@ class Password extends \Core\Controller {
         View::renderTemplate('Password/reset_confirmation.html');
     }
 
+
     /* METHOD, resetAction
     * @param void   :
-    * @return void  :
+    * @return void  : User object if found, false otherwise
     */
     public function resetAction() {
         //Get the hexdex token from the route $params array
         $token = $this->route_params['token'];
 
+        //Get the User using the token
+        $user = User::findByPasswordReset($token);
         
     }
 }
