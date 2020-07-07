@@ -43,12 +43,40 @@ class Password extends \Core\Controller {
 
         // If valid token, then display the View for setting a new password
         if ($user) {
-            View::renderTemplate('Password/reset.html');
+            View::renderTemplate('Password/reset.html'
+                ,[
+                    // Pass the token to the View
+                    'token'=>$token
+                ]
+            );
         }
         
         // If invalid token...
         else {
             echo "Password reset token invalid";
+        }
+    }
+
+
+    /* METHOD, passwordResetAction
+    * @param void   :
+    * @return void  : 
+    */
+    public function passwordResetAction() {
+        // Get the token value from the hidden input on the form
+        $token = $_POST['token'];
+
+        //Get the User using the token
+        $user = User::findByPasswordReset($token);
+
+        if ($user) {
+            //Reset password
+            echo 'All good boss';
+        }
+
+        else {
+            //Error message
+            echo 'Unexpected error trying to reset';
         }
     }
 }
