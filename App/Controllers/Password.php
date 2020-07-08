@@ -17,6 +17,25 @@ class Password extends \Core\Controller {
     }
 
 
+    /* METHDO, getUserOrExit
+    * @param string     : Reset token
+    * @return mixed     : User object if found, or false
+    */
+    protected function getUserOrExit($token) {
+        //Get the User using the token
+        $user = User::findByPasswordReset($token);
+
+        if ($user) {
+            return $user;
+        }
+
+        else {
+            View::renderTemplate('Password/token_expired.html');
+            exit;
+        }
+    }
+
+
     /* METHOD, requestResetAction
     * @param void   :
     * @return void  : Send the password reset link to the supplied email from POST
@@ -38,23 +57,15 @@ class Password extends \Core\Controller {
         //Get the hexdex token from the route $params array
         $token = $this->route_params['token'];
 
-        //Get the User using the token
-        $user = User::findByPasswordReset($token);
+        $user = $this->getUserOrExit($token);
 
         // If valid token, then display the View for setting a new password
-        if ($user) {
-            View::renderTemplate('Password/reset.html'
-                ,[
-                    // Pass the token to the View
-                    'token'=>$token
-                ]
-            );
-        }
-        
-        // If invalid token...
-        else {
-            echo "Password reset token invalid";
-        }
+        View::renderTemplate('Password/reset.html'
+            ,[
+                // Pass the token to the View
+                'token'=>$token
+            ]
+        );
     }
 
 
@@ -66,18 +77,10 @@ class Password extends \Core\Controller {
         // Get the token value from the hidden input on the form
         $token = $_POST['token'];
 
-        //Get the User using the token
-        $user = User::findByPasswordReset($token);
+        $user = $this->getUserOrExit($token);
 
-        if ($user) {
-            //Reset password
-            echo 'All good boss';
-        }
-
-        else {
-            //Error message
-            echo 'Unexpected error trying to reset';
-        }
+        //Reset password
+        echo 'All good boss';
     }
 }
 ?>
