@@ -18,7 +18,7 @@ $router = new Core\Router();
 
 /* Create Routing Table */
 $router->add('',['controller'=>'Home','action'=>'index']);
-// The second parameter, an array, is an optional array to specify controllers, actions, namespaces, etc
+// The second parameter, an array, is an optional array, which can specify controllers and actions, as well as optional parameters, such as namespaces, tokens, and keys.
 
 /* Routes without parameters */
 $router->add('{controller}/{action}');
@@ -32,7 +32,7 @@ $router->add(
     ]
 );
 
-//Login
+//Login Action
 $router->add(
     'login',
     [
@@ -40,6 +40,8 @@ $router->add(
         'action'=>'new'
         ]
     );
+
+//Logout Action
 $router->add(
     'logout',
     [
@@ -48,7 +50,7 @@ $router->add(
         ]
     );
 
-//Reset Password using hexdex token
+//Password Reset Action using hexdex token
 $router->add(
     'password/reset/{token:[\da-f]+}',
     [
