@@ -23,7 +23,10 @@
             }//close rules 
         });
         // Show Password Toggle Button
-        $('#inputPassword').hideShowPassword(true,true);
+        $('#inputPassword').hideShowPassword({
+                show:false,
+                innerToggle:'focus'
+        });
     });
 </script>
 
