@@ -14,18 +14,19 @@ class Router//Based on the route, gets the Controller and Action.
     *   @param string   :   The controller or action or namespace (optional)
     *   @return void    :   ADD ROUTE TO ROUTING TABLE
     */
-    public function add($route,$params = []) {//$params is apparently now an optional argument
-        /* CONVERT ROUTES TO REGULAR EXPRESSIONS */
+    public function add($route,$params = []) {
+        //Turn routes into regex
+
         //1 ESCAPE FWD SLASH ( / ==> \/ )
         $route = preg_replace('/\//','\\/',$route);
 
         //2 CONVERT {word} ==> named capture group
         $route = preg_replace('/\{([a-z]+)\}/','(?P<\1>[a-z-]+)',$route);//note: \1 is a backreference to [1] which contains the capture group
 
-        //3 CONVERT VARIABLES (EX: {id:\d+})
+        //3 Convert Variables (EX: {id:\d+})
         $route = preg_replace('/\{([a-z]+):([^\}]+)\}/','(?P<\1>\2)',$route);
 
-        //4 ADD START / END DELIMITERS (^ and $) and Case-Insensitive tag, i
+        //4 Add Start/End Delimiterse (^ and $) and Case-Insensitive tag, i
         $route = '/^' . $route . '$/i';
 
         //ADD THE ROUTE TO THE TABLE
