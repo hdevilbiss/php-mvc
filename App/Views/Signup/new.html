@@ -61,11 +61,11 @@
         <div>
             <!-- The "for" attribute in <label> must match the "id" attribute in <input> -->
             <label for="inputName">Name: </label>
-            <input id="inputName" name="name" placeholder="Name" autofocus value="{{ user.name }}" required />
+            <input id="inputName" name="user_name" placeholder="Name" autofocus value="{{ user.user_name }}" required />
         </div>
         <div>
             <label for="inputEmail">Email address: </label>
-            <input id="inputEmail" name="email" placeholder="email@address" value="{{ user.email }}" type="email" required />
+            <input id="inputEmail" name="user_email" placeholder="email@address" value="{{ user.user_email }}" type="email" required />
         </div>
         <div>
             <label for="inputPassword">Password: </label>
