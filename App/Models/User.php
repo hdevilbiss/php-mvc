@@ -45,11 +45,21 @@ class User extends \Core\Model {
 
     /* METHOD: emailExists
     *   @param string   :   $email from login form
+    *   @param string   :   Optional ignore_id (return false anyway, so that we can use this function for password reset)
     *   @return boolean :   Search for $email in the DB (unique index) using a custom, static User method
     */
-    public static function emailExists($email) {
+    public static function emailExists($email,$ignore_id = null) {
         //returns true if the static User method returns a User object
-        return static::findByEmail($email) !== false;
+        $user = static::findByEmail($email);
+
+        if ($user) {
+            // Check whether the user_id exists, or whether it is null
+            if ($user->user_id != $ignore_id) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -120,7 +130,7 @@ class User extends \Core\Model {
         if ($user) {
             //Is the token expired?
             if (strtotime($user->password_reset_expiry) > time()) {
-                //Yes, return the user object
+                //Not Expired, return the user object
                 return $user;
             }
         }
@@ -155,6 +165,20 @@ class User extends \Core\Model {
     }
 
 
+    /* METHOD, resetPassword
+    * @param string     : The new password
+    * @return boolean   : True = Successful Update
+    */
+    public function resetPassword($password) {
+        $this->password = $password;
+
+        $this->validate();
+
+        //True = No errors
+        return empty($this->errors);
+    }
+
+
     /* METHOD: save
     *   @param void     : 
     *   @return boolean :   Save form data to the database
@@ -176,8 +200,8 @@ class User extends \Core\Model {
             $stmt = $db->prepare($sql);
 
             /* Bind the parameters */
-            $stmt->bindValue(':name',$this->name,PDO::PARAM_STR);
-            $stmt->bindValue(':email',$this->email,PDO::PARAM_STR);
+            $stmt->bindValue(':name',$this->user_name,PDO::PARAM_STR);
+            $stmt->bindValue(':email',$this->user_email,PDO::PARAM_STR);
             $stmt->bindValue(':password_hash',$password_hash,PDO::PARAM_STR);
 
             /* Execute the SQL statement (returns true or false) */
@@ -255,23 +279,24 @@ class User extends \Core\Model {
         return $stmt->execute();
     }
 
+
     /* METHOD: validate
     *   @param void     :
     *   @return void    :   Populate the errors[] array of the calling User object as needed
     */
     public function validate() {
         /* Validate the name */
-        if ($this->name == '') {
+        if ($this->user_name == '') {
             $this->errors[] = 'Name is required.';
         }
 
         /* Validate the email */
-        if (filter_var($this->email,FILTER_VALIDATE_EMAIL)===false) {
+        if (filter_var($this->user_email,FILTER_VALIDATE_EMAIL)===false) {
             $this->errors[] = 'Invalid email.';
         }
 
-        /* Check whether the email already exists in the database */
-        if (static::emailExists($this->email)) {
+        /* Check whether the email already exists in the database; the second argument allows us to use the validate function for reset email password validation; the id will be null if this function call is trying to enter a new record */
+        if (static::emailExists($this->user_email, $this->user_id ?? null )) {
             $this->errors[] = 'That email is already taken.';
         }
 
