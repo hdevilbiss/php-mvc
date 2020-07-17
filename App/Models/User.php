@@ -175,7 +175,29 @@ class User extends \Core\Model {
         $this->validate();
 
         //True = No errors
-        return empty($this->errors);
+        if (empty($this->errors)) {
+            //Regen the password hash
+            $password_hash = password_hash($this->password,PASSWORD_DEFAULT);
+
+            //Prepare the insertion query for the new password: set new hash, nullify the reset token and expiry
+            $sql = "UPDATE users
+                    SET user_password_hash = :password_hash,
+                    password_reset_hash = NULL,
+                    password_reset_expiry = NULL
+                    WHERE user_id = :user_id";
+
+            //Get DB connection, prepare the SQL statement
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            //bind the parameters (user_id and pw hash)
+            $stmt->bindValue(':user_id',$this->user_id,PDO::PARAM_INT);
+            $stmt->bindValue(':password_hash',$password_hash,PDO::PARAM_STR);
+
+            //Execute
+            return $stmt->execute();
+        }
+        //Validation fails
+        return false;
     }
 
 
