@@ -6,6 +6,7 @@ use \App\Models\User;
 /* Signup Controller */
 class Signup extends \Core\Controller {
 
+    
     /* METHOD: createAction
     * @param void   :  
     * @return void  : Create a new User record in the users table
@@ -17,6 +18,9 @@ class Signup extends \Core\Controller {
 
         /* User/save action will validate inputs and INSERT INTO database */
         if ($user->save()) {
+
+            /* Send activation email */
+            $user->sendActivationEmail();
 
             /* Redirect to Signup/success action */
             $this->redirect('/signup/success');
