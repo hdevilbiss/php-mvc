@@ -209,22 +209,30 @@ class User extends \Core\Model {
         /* Validate the inputs */
         $this->validate();
 
-        /* Check for error messages before database actions */
+        /* Generate a new activation hash */
+        $token = new Token();
+        $hashed_token = $token->getHash();
+
+        /* Check for error messages before proceeding to database action */
         if (empty($this->errors)) {
             /* Salt that password */
             $password_hash = password_hash($this->password,PASSWORD_DEFAULT);
             
             /* Parameter-ized SQL query */
-            $sql = 'INSERT INTO users (user_name,user_email,user_password_hash) VALUES (:name,:email,:password_hash)';
+            $sql = 'INSERT INTO users 
+                    (user_name,user_email,user_password_hash,activation_token_hash) 
+                    VALUES 
+                    (:user_name,:user_email,:user_password_hash,:activation_token_hash)';
 
-            /* Make the database connection using the static method of the Ccre Model class and prepare the query */
+            /* Make the database connection using the static method of the Core Model class and prepare the query */
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
             /* Bind the parameters */
-            $stmt->bindValue(':name',$this->user_name,PDO::PARAM_STR);
-            $stmt->bindValue(':email',$this->user_email,PDO::PARAM_STR);
-            $stmt->bindValue(':password_hash',$password_hash,PDO::PARAM_STR);
+            $stmt->bindValue(':user_name',$this->user_name,PDO::PARAM_STR);
+            $stmt->bindValue(':user_email',$this->user_email,PDO::PARAM_STR);
+            $stmt->bindValue(':user_password_hash',$password_hash,PDO::PARAM_STR);
+            $stmt->bindValue(':activation_token_hash',$hashed_token,PDO::PARAM_STR);
 
             /* Execute the SQL statement (returns true or false) */
             return $stmt->execute();
