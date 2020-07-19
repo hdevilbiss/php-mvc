@@ -6,26 +6,34 @@ use \App\Models\User;
 /* Signup Controller */
 class Signup extends \Core\Controller {
 
-    /* Method, "create"
-    *   @return void
-    *   Action for dealing with signup form data
+    /* METHOD: createAction
+    * @param void   :  
+    * @return void  : Create a new User record in the users table
     */
     public function createAction() {
-        /* Create a new User object with the variables from the superglobal POST array */
+
+        /* Create a new User from the POST array */
         $user = new User($_POST);
 
-        /* Validate User Inputs and Execute DB Query, if applicable */
+        /* User/save action will validate inputs and INSERT INTO database */
         if ($user->save()) {
-            /* Redirect to the success action */
+
+            /* Redirect to Signup/success action */
             $this->redirect('/signup/success');
-        } else {
-            /* Display the error messages from input validation */
-            //var_dump($user->errors);
+
+        }
+        
+        /* Invalid inputs */
+        else {
+
+            /* Redisplay the signup form */
             View::renderTemplate('Signup/new.html',[
                 'user' => $user
             ]);
+
         }   
-    }//close function, "create"
+    }
+
 
     /* Method, "new"
     *   @return void
@@ -33,7 +41,8 @@ class Signup extends \Core\Controller {
     */
     public function newAction() {
         View::renderTemplate('Signup/new.html');
-    }//close function, "new"
+    }
+
 
     /* Method, "success"
     *   @return void
