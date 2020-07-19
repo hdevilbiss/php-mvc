@@ -212,6 +212,7 @@ class User extends \Core\Model {
         /* Generate a new activation hash */
         $token = new Token();
         $hashed_token = $token->getHash();
+        $this->activation_token_hash = $token->getValue();
 
         /* Check for error messages before proceeding to database action */
         if (empty($this->errors)) {
@@ -238,6 +239,30 @@ class User extends \Core\Model {
             return $stmt->execute();
         }
         return false;
+    }
+
+
+        /* METHOD, sendActivationEmail
+    * @param void       :
+    * @return void      : Send an activation token to the user
+    */
+    public function sendActivationEmail() {
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/signup/activate/' . $this->activation_token_hash;
+
+        $text = View::getTemplate('Signup/activation_email.txt',[
+            'url' => $url
+            ]);
+        
+        $html = View::getTemplate('Signup/activation_email.html',[
+            'url'=>$url
+        ]);
+
+        Mail::send(
+            $this->user_email,//$email
+            'Please activate your account',//$subject
+            $text,//$text
+            $html//$html
+        );
     }
 
 
