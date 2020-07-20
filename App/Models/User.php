@@ -29,14 +29,19 @@ class User extends \Core\Model {
     *   @return mixed   :   If Password matches its hash, then return the User object. Otherwise, false.
     */
     public static function authenticate($email,$password) {
+
         // Search the user in the database using a custom, static User method
         $user = static::findByEmail($email);
 
-        if ($user) {
+        /* Restrict login to only active users (is_active) */
+        if ($user && $user->is_active) {
+
             // Verify password
             if (password_verify($password,$user->user_password_hash)) {
+
                 //If the provided password hash matches password hash from the database, then return the User object
                 return $user;
+
             }
         }
         return false;
@@ -60,6 +65,30 @@ class User extends \Core\Model {
         }
 
         return false;
+    }
+
+    /* METHOD: findByActivationToken
+    * @param string     : $token_value from the URL
+    * @return void      :
+    */
+    public static function findByActivationToken($token_value) {
+        /* Create a new Token from the value in the activation link, and then hash it */
+        $token = new Token($token_value);
+        $hashed_token = $token->getHash();
+
+        /* SQL to search for the unique activation hash */
+        $sql = "UPDATE users
+        SET is_active = 1,
+            activation_token_hash = NULL
+        WHERE activation_token_hash = :hashed_token";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        /* Bind Values */
+        $stmt->bindValue(':hashed_token',$hashed_token,PDO::PARAM_STR);//VARCHAR(64)
+
+        $stmt->execute();
     }
 
 
@@ -212,6 +241,7 @@ class User extends \Core\Model {
         /* Generate a new activation hash */
         $token = new Token();
         $hashed_token = $token->getHash();
+        $this->activation_token_hash = $token->getValue();
 
         /* Check for error messages before proceeding to database action */
         if (empty($this->errors)) {
@@ -238,6 +268,30 @@ class User extends \Core\Model {
             return $stmt->execute();
         }
         return false;
+    }
+
+
+        /* METHOD, sendActivationEmail
+    * @param void       :
+    * @return void      : Send an activation token to the user
+    */
+    public function sendActivationEmail() {
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/signup/activate/' . $this->activation_token_hash;
+
+        $text = View::getTemplate('Signup/activation_email.txt',[
+            'url' => $url
+            ]);
+        
+        $html = View::getTemplate('Signup/activation_email.html',[
+            'url'=>$url
+        ]);
+
+        Mail::send(
+            $this->user_email,//$email
+            'Please activate your account',//$subject
+            $text,//$text
+            $html//$html
+        );
     }
 
 

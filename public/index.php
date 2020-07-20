@@ -48,7 +48,17 @@ $router->add(
         'controller'=>'Login',
         'action'=>'destroy'
         ]
-    );
+);
+
+
+// New User activation route
+$router->add(
+    'signup/activate/{token:[\da-f]+}',
+    [
+        'controller' => 'Signup',
+        'action' => 'activate'
+    ]
+);
 
 //Password Reset Action using hexdex token
 $router->add(
@@ -58,6 +68,7 @@ $router->add(
         'action' => 'reset'
     ]
 );
+
 
 //var_dump($router->getRoutes());
 
