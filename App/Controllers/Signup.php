@@ -6,7 +6,29 @@ use \App\Models\User;
 /* Signup Controller */
 class Signup extends \Core\Controller {
 
-    
+    /* METHOD: activateAction
+    * @param void   :
+    * @return void  :
+    */
+    public function activateAction() {
+        /* Get the activation token from the route's parameters array and Try to find it in the users table */
+        $user = User::findByActivationToken($this->route_params['token']);
+
+        $this->redirect('/signup/activation-complete');
+        
+    }
+
+
+    /* METHOD: activationCompleteAction
+    * @param void   :
+    * @return void  : Render the Signup activation success view
+    */
+    public function activationCompleteAction() {
+        View::renderTemplate('Signup/activated.html');
+    }
+
+
+
     /* METHOD: createAction
     * @param void   :  
     * @return void  : Create a new User record in the users table
@@ -27,7 +49,7 @@ class Signup extends \Core\Controller {
 
         }
         
-        /* Invalid inputs */
+        /* Ope, invalid inputs */
         else {
 
             /* Redisplay the signup form */
