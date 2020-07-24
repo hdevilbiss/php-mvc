@@ -1,23 +1,18 @@
 {% extends 'base.html' %}
 
-{% block title %}Your Goals{% endblock %}
+{% block title %}Enter a New Goal{% endblock %}
 
 {% block body %}
 
-<h1>All Your Goals</h1>
+<h1>New Goal</h1>
 
 <!-- If someone is logged in and they have goals, then display them -->
 {% if current_user %}
 
-    {% if goals %}
-
-    <h2>Your Goals</h2>>
-
-    {% else %}
-
-    You have not made any goals yet... Would you like to <a href="/goals/new">make one</a> now?
-    
-    {% endif %}
+    <form id="newGoal">
+        <label for="goalTitle">Title</label>
+        <input name="goalTitle" id="goalTitle" type="text">
+    </form>
     
 {% else %}
     <p>
