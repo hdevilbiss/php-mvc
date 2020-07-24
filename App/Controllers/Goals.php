@@ -15,5 +15,13 @@ class Goals extends Authenticated {
     public function indexAction() {
         View::renderTemplate('Goals/index.html');
     }
+
+    /* METHOD: new
+    * @param void   :
+    * @return       :
+    */
+    public function newAction() {
+        View::renderTemplate('Goals/new.html');
+    }
 }
 ?>
