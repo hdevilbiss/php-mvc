@@ -5,6 +5,18 @@
 {% block body %}
 
 <h1>User Profile</h1>
-{{ session.return_to }}
+
+<!-- 
+    <dl> : Description List (Easy to style with CSS)
+    <dt> : Define a term/name
+    <dd> : Describes the term/name
+-->
+
+    <dl>
+        <dt>Name</dt>
+        <dd>{{ user.user_name }}</dd>
+        <dt>Email</dt>
+        <dd>{{ user.user_email }}</dd>
+    </dl>
 
 {% endblock %}
