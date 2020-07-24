@@ -9,6 +9,9 @@
     // JavaScript Form Validation
     // Run code after page load
     $(document).ready(function() {
+
+        // Save the user_id from the Twig variable to a JavaScript variable
+        var user_id = '{{ user.user_id }}';
         
         // Validate the form
         $('#formEditProfile').validate({
@@ -20,7 +23,15 @@
                 ,email: {
                     required:true,
                     email:true,
-                    remote:'/account/validate-email'//AJAX
+                    remote: {
+                        //jQuery Validation plugin remote method
+                        url: '/account/validate-email'
+                        ,data: {
+                            ignore_id: function() {
+                                return user_id;
+                            }
+                        }
+                    }
                 }
                 ,password:{
                     required:true,
