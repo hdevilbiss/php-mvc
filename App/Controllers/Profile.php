@@ -3,7 +3,7 @@ namespace App\Controllers;
 //Note: The Authenticated controller is in the same namespace as Profile
 
 use \Core\View;
-use App\Auth;
+use \App\Auth;
 
 /* Profile Controller (Private due to inheriting from the Authenticated abstract class) */
 class Profile extends Authenticated {
@@ -13,7 +13,11 @@ class Profile extends Authenticated {
     * @return void    :   Render the index template
     */
     public function indexAction() {
-        View::renderTemplate('Profile/index.html');
+        View::renderTemplate('Profile/index.html',
+            [
+                'user' => Auth::getUser()
+            ]
+        );
     }
 }
 ?>
