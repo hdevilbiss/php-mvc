@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Edit Your Profile{% endblock %}
+
+{% block footer %}
+<script src="/js/hideShowPassword.min.js"></script>
+<script src="/js/apps.js"></script>
+
+<script>
+    // JavaScript Form Validation
+    // Run code after page load
+    $(document).ready(function() {
+
+        // Save the user_id from the Twig variable to a JavaScript variable
+        var user_id = '{{ user.user_id }}';
+        
+        // Validate the form
+        $('#formEditProfile').validate({
+            // Add validation rules
+            rules :{
+                name: {
+                  required:true  
+                }
+                ,email: {
+                    required:true,
+                    email:true,
+                    remote: {
+                        //jQuery Validation plugin remote method
+                        url: '/account/validate-email'
+                        ,data: {
+                            ignore_id: function() {
+                                return user_id;
+                            }
+                        }
+                    }
+                }
+                ,password:{
+                    required:true,
+                    minlength:6,
+                    validPassword:true//custom method
+                }
+            }//close rules
+            ,messages:{
+                email:{
+                    remote:'Email already taken.'
+                }
+            }//close messages  
+        });
+        // Show Password Toggle Button
+        $('#inputPassword').hideShowPassword({
+                show:false,
+                innerToggle:'focus'
+        });
+    });
+</script>
+
+{% endblock %}
+
+{% block body %}
+
+    <h1>Edit Your Profile</h1>
+
+    {% if user.errors is not empty %}
+    <p>Errors:</p>
+    <ul>
+        {% for error in user.errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="POST" id="formEditProfile">
+        <div>
+            <!-- The "for" attribute in <label> must match the "id" attribute in <input> -->
+            <label for="inputName">Name: </label>
+            <input id="inputName" name="user_name" placeholder="Name" value="{{ user.user_name }}" required />
+        </div>
+        <div>
+            <label for="inputEmail">Email address: </label>
+            <input id="inputEmail" name="user_email" placeholder="email@address" value="{{ user.user_email }}" type="email" required />
+        </div>
+        <div>
+            <label for="inputPassword">Password: </label>
+            <input type="password" id="inputPassword" name="password" placeholder="Password" required />
+        </div>
+        
+        <button type="submit">Save Edit</button>
+        <a href="/profile/index">Cancel</a>
+    </form>
+{% endblock %}

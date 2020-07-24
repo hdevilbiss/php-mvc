@@ -68,13 +68,14 @@ abstract class Controller {
     }
 
     /* METHOD, requireLogin
-    *   @param void     :
-    *   @return void    :   If the Auth static method does not evaluate to true, then redirect the client to login
+    * @param void     :
+    * @return void    :   If the Auth static method does not evaluate to true, then redirect the client to login
     */
     public function requireLogin() {
         
         /* Check if user is logged in */
-        if (!Auth::getUser()) {
+        if ( ! Auth::getUser() ) {
+            
             /* Flash Message for user feedback */
             Flash::addMessage('Please login to access that page.',Flash::INFO);
 
