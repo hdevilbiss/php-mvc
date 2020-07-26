@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+
 use PDO;
 use \App\Token;
 use \App\Mail;
@@ -48,12 +49,14 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD: emailExists
-    *   @param string   :   $email from login form
-    *   @param string   :   Optional ignore_id (return false anyway, so that we can use this function for password reset)
-    *   @return boolean :   Search for $email in the DB (unique index) using a custom, static User method
+    /** METHOD: emailExists
+    * @param string   :   $email from login form
+    * @param string   :   Optional ignore_id (NULL for signup, user_id for reset or edit)
+    *
+    * @return boolean :   Search for $email in the DB
     */
     public static function emailExists($email,$ignore_id = null) {
+
         //returns true if the static User method returns a User object
         $user = static::findByEmail($email);
 
@@ -92,7 +95,7 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD: findByEmail
+    /** METHOD: findByEmail
     *   @param string   :   $email from a user input
     *   @return mixed   :   User object instance or false
     */
@@ -103,7 +106,7 @@ class User extends \Core\Model {
         //Make database connection using a static method of the core Model
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(':email',$email,PDO::PARAM_STR);
+        $stmt->bindValue(':email',$email,PDO::PARAM_STR);
 
         //We want to return a User object, not an array, so change the PDO fetch mode
         $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
