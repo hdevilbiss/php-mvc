@@ -6,8 +6,9 @@ use \App\Models\User;
 /* Account Controller */
 class Account extends \Core\Controller {
 
-    /* Send AJAX Request to Determine Whether Email is Available
-    *   @param void @return void
+    /** Send AJAX Request to Determine Whether Email is Available
+    * @param void
+    * @return void
     */
     public function validateEmailAction() {
         $is_valid = ! User::emailExists(
