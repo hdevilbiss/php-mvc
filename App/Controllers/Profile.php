@@ -9,6 +9,17 @@ use \App\Flash;
 /* Profile Controller (Private due to inheriting from the Authenticated abstract class) */
 class Profile extends Authenticated {
 
+
+    /**
+     * ACTION FILTER: before
+     * @param void
+     * @return void     : Call the parent (Authenticated) before action filter and then Get the User using the Auth class
+     */
+    protected function before() {
+        parent::before();
+        $this->user = Auth::getUser();
+    }
+
     /**
      * METHOD: index
      * @param void     :
@@ -17,7 +28,7 @@ class Profile extends Authenticated {
     public function indexAction() {
         View::renderTemplate('Profile/index.html',
             [
-                'user' => Auth::getUser()
+                'user' => $this->user
             ]);
     }
 
@@ -30,7 +41,7 @@ class Profile extends Authenticated {
     public function editAction() {
         View::renderTemplate('Profile/edit.html',
         [
-            'user' => Auth::getUser()
+            'user' => $this->user
         ]);
     }
 
@@ -40,9 +51,8 @@ class Profile extends Authenticated {
      * @return void : Update the user record in the database
      */
     public function updateAction() {
-        $user = Auth::getUser();
 
-        if ($user->updateUserProfile($_POST)) {
+        if ($this->user->updateUserProfile($_POST)) {
             
             // UPDATE query was successful
             Flash::addMessage('Changes saved');
@@ -54,7 +64,7 @@ class Profile extends Authenticated {
             // Validation Error - Redisplay the form
             View::renderTemplate('Profile/edit.html',
             [
-                'user' => $user
+                'user' => $this->user
             ]);
         }
     }
