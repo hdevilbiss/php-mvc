@@ -67,7 +67,7 @@
     </ul>
     {% endif %}
 
-    <form method="POST" id="formEditProfile">
+    <form method="POST" id="formEditProfile" action="/profile/update">
         <div>
             <!-- The "for" attribute in <label> must match the "id" attribute in <input> -->
             <label for="inputName">Name: </label>
@@ -79,8 +79,8 @@
         </div>
         <div>
             <label for="inputPassword">Password: </label>
-            <input type="password" id="inputPassword" name="password" placeholder="Password" aria-describedby="helpBlock" />
-            <span id="helpBlock">
+            <input type="password" id="inputPassword" name="password" placeholder="Password" aria-describedby="passwordHelpBlock" />
+            <span id="passwordHelpBlock">
                 Keep password blank to keep your current password.
             </span>
         </div>
