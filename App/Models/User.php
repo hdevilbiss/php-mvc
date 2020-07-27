@@ -385,6 +385,65 @@ class User extends \Core\Model {
         return $stmt->execute();
     }
 
+    /**
+     * METHOD: updateUserProfile
+     * @param array     : $data Data from the Profile/edit <form>
+     * @return boolean  : True if valid update, false otherwise
+     */
+    public function updateUserProfile($data) {
+
+        // Get the form values and assign to the User object
+        $this->user_name = $data['user_name'];
+        $this->user_email = $data['user_email'];
+        
+        // Only validate/update the password if it was supplied
+        if ($data['password'] != '') {
+            $this->password = $data['password'];
+        }
+
+        $this->validate();
+
+        if ( empty($this->errors) ) {
+
+            // No errors here, so start the query to Update the User record
+            $sql = "UPDATE users
+                SET user_name = :user_name,
+                    user_email = :user_email";
+            
+            // Check whether the password was set by POST
+            if ( isset($this->password) ) {
+                
+                // If set, then add the password to the SQL query
+                $sql .= ", user_password_hash = :password_hash";
+
+            }
+
+            // Finish the SQL statement   
+            $sql .= "\nWHERE user_id = :user_id";
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            // Bind values
+            $stmt->bindValue(':user_name',$this->user_name,PDO::PARAM_STR);
+            $stmt->bindValue(':user_email',$this->user_email,PDO::PARAM_STR);
+            $stmt->bindValue(':user_id',$this->user_id,PDO::PARAM_INT);
+
+            // Only hash and bind the password hash if set
+            if ( isset($this->password) ) {
+                
+                $password_hash = password_hash($this->password,PASSWORD_DEFAULT);
+
+                $stmt->bindValue(':password_hash',$password_hash,PDO::PARAM_STR);
+
+            }
+    
+            return $stmt->execute();
+        }
+
+        // If you get here, then there was a validation error
+        return false;
+    }
 
     /**
      * METHOD: validate
@@ -407,19 +466,22 @@ class User extends \Core\Model {
             $this->errors[] = 'That email is already taken.';
         }
 
-        /* Check password length */
-        if (strlen($this->password) < 6) {
-            $this->errors[] = 'Your password must be at least 6 characters in length.';
-        }
+        // Password validation (only if set)
+        if (isset($this->password)) {
+             /* Check password length */
+            if (strlen($this->password) < 6) {
+                $this->errors[] = 'Your password must be at least 6 characters in length.';
+            }
 
-        /* Check for at least one letter (amongst any number of any other character, including none) */
-        if (preg_match('/.*[a-z]+.*/i',$this->password) == 0) {
-            $this->errors[] = 'There must be at least one letter in your password (a-z or A-Z).';
-        }
+            /* Check for at least one letter (amongst any number of any other character, including none) */
+            if (preg_match('/.*[a-z]+.*/i',$this->password) == 0) {
+                $this->errors[] = 'There must be at least one letter in your password (a-z or A-Z).';
+            }
 
-        /* Check for at least one number */
-        if (preg_match('/.*\d+.*/',$this->password) == 0) {
-            $this->errors[] = 'There must be at least one digit in your password.';
+            /* Check for at least one number */
+            if (preg_match('/.*\d+.*/',$this->password) == 0) {
+                $this->errors[] = 'There must be at least one digit in your password.';
+            }
         }
     }
 }
