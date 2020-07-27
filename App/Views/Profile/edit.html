@@ -34,7 +34,6 @@
                     }
                 }
                 ,password:{
-                    required:true,
                     minlength:6,
                     validPassword:true//custom method in public/js
                 }
@@ -80,7 +79,10 @@
         </div>
         <div>
             <label for="inputPassword">Password: </label>
-            <input type="password" id="inputPassword" name="password" placeholder="Password" required />
+            <input type="password" id="inputPassword" name="password" placeholder="Password" aria-describedby="helpBlock" />
+            <span id="helpBlock">
+                Keep password blank to keep your current password.
+            </span>
         </div>
         
         <button type="submit">Save Edit</button>
