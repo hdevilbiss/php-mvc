@@ -7,17 +7,19 @@
     </head>
     <body>
         <nav>
-            <a href="/">Home</a> |
-            {% if current_user %}
-                <a href="/logout">Log out</a> |
-                <a href="/profile/index">Your Profile</a> |
-                <a href="/goals/index">Your Goals</a> |
-            {% else %}
-                <a href="/signup/new">Sign Up</a> |
-                <a href="/login/new">Login</a> |
-            {% endif %}
-            <a href="/posts/index">Posts</a> |
-            <a href="/admin/users/index">Admin</a>      
+            <ul>
+                <li><a href="/">Home</a></li> 
+                {% if current_user %}
+                    <li><a href="/logout">Log out</a></li>
+                    <li><a href="/profile/index">Your Profile</a></li>
+                    <li><a href="/goals/index">Your Goals</a></li>
+                {% else %}
+                    <li><a href="/signup/new">Sign Up</a></li>
+                    <li><a href="/login/new">Login</a></li>
+                {% endif %}
+                <li><a href="/posts/index">Posts</a></li>
+                <li><a href="/admin/users/index">Admin</a></li>      
+        </ul>
         </nav>
 
         {% for message in flash_messages %}
