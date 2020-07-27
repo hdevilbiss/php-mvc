@@ -3,17 +3,22 @@ namespace Core;
 /* Core Router class */
 class Router//Based on the route, gets the Controller and Action.
 {
-    /* Array for the Routing Table */
+    /**
+     * @var array   : The Routing Table
+     */
     protected $routes = [];
 
-    /* Saved Properties of the Matched Route */
+    /**
+     * @var array   : Saved Properties of the Matched Route
+     */
     protected $params = [];
 
-    /* METHOD: add
-    *   @param string   :   The route
-    *   @param string   :   The controller or action or namespace (optional)
-    *   @return void    :   ADD ROUTE TO ROUTING TABLE
-    */
+    /**
+     * METHOD: add
+     * @param string   :   $route The route
+     * @param string   :   $params optional controller, action or namespace
+     * @return void    :   Add route to the routing table array
+     */
     public function add($route,$params = []) {
         //Turn routes into regex
 
@@ -26,17 +31,18 @@ class Router//Based on the route, gets the Controller and Action.
         //3 Convert Variables (EX: {id:\d+})
         $route = preg_replace('/\{([a-z]+):([^\}]+)\}/','(?P<\1>\2)',$route);
 
-        //4 Add Start/End Delimiterse (^ and $) and Case-Insensitive tag, i
+        //4 Add Start/End Delimiters (^ and $) and Case-Insensitive tag, i
         $route = '/^' . $route . '$/i';
 
         //ADD THE ROUTE TO THE TABLE
         $this->routes[$route] = $params;
     }
 
-    /* METHOD: dispatch
-    *   @param string   :   The query string from the $_SERVER superglobal array
-    *   @return void    :   If a route gets matched, then execute the matched controller action (or throw fits)
-    */
+    /**
+     * METHOD: dispatch
+     * @param string   : The query string from the $_SERVER superglobal array
+     * @return void    : If a route gets matched, then execute the matched controller action (otherwise, throw fits)
+     */
     public function dispatch($url) {
         /* Remove the query string variables from the string using a custom protected method in the core Router class */
         $url = $this->removeQueryStringVariables($url);
@@ -84,10 +90,11 @@ class Router//Based on the route, gets the Controller and Action.
         }
     }
 
-    /* METHOD: convertToStudlyCaps
-    *   @param string   :   The controller name (e.g., Posts)
-    *   @return string  :   The same controller name, ButWithStudlyCaps - same as controller PHP file names
-    */
+    /**
+     * METHOD: convertToStudlyCaps
+     * @param string   :   $string The controller name (e.g., Posts)
+     * @return string  :   The same controller name, ButWithStudlyCaps
+     */
     protected function convertToStudlyCaps($string) {
         /*
         *1. Replace dashes with spaces      (my-name-is) --> (my name is)
@@ -97,18 +104,20 @@ class Router//Based on the route, gets the Controller and Action.
         return str_replace(' ', '', ucwords(str_replace('-', ' ', $string)));
     }
 
-    /* METHOD: convertToCamelCase
-    *   @param string   :   The action name (e.g., new)
-    *   @return string  :   The action name, in camelCase
-    */
+    /**
+     * METHOD: convertToCamelCase
+     * @param string   :   $string The action name (e.g., new)
+     * @return string  :   The same action name, but in camelCase
+     */
     protected function convertToCamelCase($string) {
         return lcfirst($this->convertToStudlyCaps($string));
     }
 
-    /* METHOD: getNamespace
-    *   @param void     :
-    *   @return string  :   Either return the default namespace, or a custom namespace from the routing table
-    */
+    /**
+     * METHOD: getNamespace
+     * @param void     :
+     * @return string  : Either return the default namespace, or a custom namespace from the routing table
+     */
     protected function getNamespace() {
         /* set the default namespace */
         $namespace = 'App\Controllers\\';
@@ -122,26 +131,29 @@ class Router//Based on the route, gets the Controller and Action.
         return $namespace;
     }
 
-    /* METHOD: getParams
-    *   @param void     :
-    *   @return array   :   Return the route parameters of the calling Router object.
-    */
+    /**
+     * METHOD: getParams
+     * @param void     :
+     * @return array   : Return the route parameters of the calling Router object.
+     */
     public function getParams() {
         return $this->params;
     }
 
-    /* METHOD: getRoutes
-    *   @param void     :
-    *   @return array   :   Show all the routes in the calling Router object.
-    */
+    /**
+     * METHOD: getRoutes
+     * @param void     :
+     * @return array   : Show all the routes in the calling Router object.
+     */
     public function getRoutes() {
         return $this->routes;
     }
 
-    /* METHOD: match
-    *   @param string   :   The route to match
-    *   @return boolean :   Check whether the query string matches any route indices.
-    */
+    /**
+     * METHOD: match
+     * @param string   : The route to match
+     * @return boolean : Check whether the query string matches any route indices.
+     */
     public function match($url) {
         /* Loop through each row in the routing table of the core Router object */
         foreach ($this->routes as $route => $params) {
@@ -162,10 +174,11 @@ class Router//Based on the route, gets the Controller and Action.
         return false;
     }
 
-    /* METHOD: removeQueryStringVariables
-    *   @param string   :   The entire query string from the $_SERVER superglobal array
-    *   @return string  :   Strip the query string from the URL by looking for "&" and "=" symbols.
-    */
+    /**
+     * METHOD: removeQueryStringVariables
+     * @param string   : The entire query string from the $_SERVER superglobal array
+     * @return string  : Strip the query string from the URL by looking for "&" and "=" symbols.
+     */
     protected function removeQueryStringVariables($url) {
         /* CHECK WHETHER URL IS EMPTY */
         if ($url != '') {
