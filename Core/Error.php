@@ -4,24 +4,25 @@ namespace Core;
 *   ERROR AND EXCEPTION HANDLER
 */
 class Error {
-    /*METHOD: "errorHandler"
-    *   CONVERT ERRORS INTO EXCEPTIONS.
-    *   @param int      :   $level = Error level
-    *   @param string   :   $message = Error message
-    *   @param string   :   $file = File name in which error was raised
-    *   @param int      :   $line = Line number within the file
-    *   @return void    :   "throw new" keywords
-    */
+    /**
+     * METHOD: errorHandler
+     * @param int      : $level = Error level
+     * @param string   : $message = Error message
+     * @param string   : $file = File name in which error was raised
+     * @param int      : $line = Line number within the file
+     * @return void    : CONVERT ERRORS INTO EXCEPTIONS
+     */
     public static function errorHandler($level,$message,$file,$line) {
         if (\error_reporting()!==0) {
             throw new \ErrorException($message,0,$level,$file,$line);
         }
-    }//close function, "errorHandler"
+    }
 
-    /*METHOD: "exceptionHandler"
-    *   @param Exception    :   $exception = The exception
-    *   @return void        :   Echo or log Exception information
-    */
+    /**
+     * METHOD: exceptionHandler
+     * @param Exception    : $exception = The exception
+     * @return void        : Echo or log Exception information
+     */
     public static function exceptionHandler($exception) {
         // Code is either 404 (not found) or 500 (general error)
         $code = $exception->getCode();
@@ -57,10 +58,10 @@ class Error {
             $message .= "\n Stack trace: " . $exception->getTraceAsString() . ".";
             $message .= "\n Thrown in '" . $exception->getFile() . "' on line " . $exception->getLine();
 
-            /* Log the error and display a generic message */
+            /* Log the error and display the corresponding template */
             error_log($message);
             View::renderTemplate("$code.html");
         }
-    }//close function, "exceptionHandler"
+    }
 }
 ?>
