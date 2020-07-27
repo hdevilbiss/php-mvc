@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+
 use PDO;
 use \App\Token;
 use \App\Mail;
@@ -7,14 +8,18 @@ use \Core\View;
 
 /* User Model */
 class User extends \Core\Model {
-    /* Array to save error messages */
+    
+    /**
+     * @var array   : Error messages
+     */
     public $errors = [];
 
 
-    /* MAGIC METHOD: __construct
-    *   @param array    :   $data from $_POST (optional)
-    *   @return void    :   Create a User object from $_POST array
-    */
+    /**
+     * MAGIC METHOD: __construct
+     * @param array    :   $data from $_POST (optional)
+     * @return void    :   Create a User object from $_POST array
+     */
     public function __construct($data = []) {
         /* Loop through the $_POST array */
         foreach ($data as $key => $value) {
@@ -23,11 +28,12 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD: authenticate
-    *   @param string   :   $email from login form
-    *   @param string   :   $password from login form
-    *   @return mixed   :   If Password matches its hash, then return the User object. Otherwise, false.
-    */
+    /**
+     * METHOD: authenticate
+     * @param string   :   $email from login form
+     * @param string   :   $password from login form
+     * @return mixed   :   If Password matches its hash, then return the User object. Otherwise, false.
+     */
     public static function authenticate($email,$password) {
 
         // Search the user in the database using a custom, static User method
@@ -48,12 +54,15 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD: emailExists
-    *   @param string   :   $email from login form
-    *   @param string   :   Optional ignore_id (return false anyway, so that we can use this function for password reset)
-    *   @return boolean :   Search for $email in the DB (unique index) using a custom, static User method
-    */
+    /** 
+     * METHOD: emailExists
+     * @param string   :   $email from login form
+     * @param string   :   Optional ignore_id (NULL for signup, user_id for reset or edit)
+     *
+     * @return boolean :   Search for $email in the DB
+     */
     public static function emailExists($email,$ignore_id = null) {
+
         //returns true if the static User method returns a User object
         $user = static::findByEmail($email);
 
@@ -67,10 +76,11 @@ class User extends \Core\Model {
         return false;
     }
 
-    /* METHOD: findByActivationToken
-    * @param string     : $token_value from the URL
-    * @return void      :
-    */
+    /**
+     * METHOD: findByActivationToken
+     * @param string     : $token_value from the URL
+     * @return void      :
+     */
     public static function findByActivationToken($token_value) {
         /* Create a new Token from the value in the activation link, and then hash it */
         $token = new Token($token_value);
@@ -92,32 +102,36 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD: findByEmail
-    *   @param string   :   $email from a user input
-    *   @return mixed   :   User object instance or false
-    */
+    /**
+     * METHOD: findByEmail
+     * @param string   :   $email from a user input
+     * @return mixed   :   User object instance or false
+     */
     public static function findByEmail($email) {
-        //Parametrized query
+
         $sql = 'SELECT * FROM users WHERE user_email = :email';
 
         //Make database connection using a static method of the core Model
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(':email',$email,PDO::PARAM_STR);
+        $stmt->bindValue(':email',$email,PDO::PARAM_STR);
 
-        //We want to return a User object, not an array, so change the PDO fetch mode
+        // Change the PDO fetch mode to get a class instance instead of an array
         $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
-        //get_called_class returns the name of the class that the static method (findByEmail) is called in
+
+        //FYI: get_called_class returns the name of the class that the static method (findByEmail) is called in
 
         $stmt->execute();
-        return $stmt->fetch();//fetch returns either a User object, or false if no records
+        return $stmt->fetch();
+        //fetch returns either a User object, or false if no record was found
     }
 
 
-    /* METHOD: findByID
-    *   @param $string  :   The $user user_id
-    *   @return mixed   :   User object if found; otherwise false
-    */
+    /**
+     * METHOD: findByID
+     * @param $string  :   The $user user_id
+     * @return mixed   :   User object if found; otherwise false
+     */
     public static function findByID($id) {
         $sql = 'SELECT * FROM users WHERE user_id = :id';
 
@@ -133,10 +147,11 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD, findByPasswordReset
-    * @param string     : Password reset hexdex token
-    * @return mixed     : User object or false
-    */
+    /**
+     * METHOD, findByPasswordReset
+     * @param string     : Password reset hexdex token
+     * @return mixed     : User object or false
+     */
     public static function findByPasswordReset($token) {
         //Create a token object and hash it
         $token = new Token($token);
@@ -166,10 +181,11 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD: rememberLogin
-    *   @param void         :
-    *   @return boolean     :   Save a new row in the rememberedLogins table
-    */
+    /**
+     * METHOD: rememberLogin
+     * @param void         :
+     * @return boolean     :   Save a new row in the rememberedLogins table
+     */
     public function rememberLogin() {
         //Generate a new token and hash
         $token = new Token();
@@ -194,10 +210,11 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD, resetPassword
-    * @param string     : The new password
-    * @return boolean   : True = Successful Update
-    */
+    /**
+     * METHOD, resetPassword
+     * @param string     : The new password
+     * @return boolean   : True = Successful Update
+     */
     public function resetPassword($password) {
         $this->password = $password;
 
@@ -230,10 +247,11 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD: save
-    *   @param void     : 
-    *   @return boolean :   Save form data to the database
-    */
+    /**
+     * METHOD: save
+     * @param void     : 
+     * @return boolean :   Save form data to the database
+     */
     public function save() {
         /* Validate the inputs */
         $this->validate();
@@ -271,10 +289,11 @@ class User extends \Core\Model {
     }
 
 
-        /* METHOD, sendActivationEmail
-    * @param void       :
-    * @return void      : Send an activation token to the user
-    */
+    /**
+     * METHOD, sendActivationEmail
+     * @param void       :
+     * @return void      : Send an activation token to the user
+     */
     public function sendActivationEmail() {
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/signup/activate/' . $this->activation_token_hash;
 
@@ -295,10 +314,11 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD: sendPasswordreset
-    * @param string     : $email to reset
-    * @return void      : Search for the email and pull up that User object; otherwise, the search will return false
-    */
+    /**
+     * METHOD: sendPasswordreset
+     * @param string     : $email to reset
+     * @return void      : Search for the email and pull up that User object; otherwise, the search will return false
+     */
     public static function sendPasswordReset($email) {
         $user = static::findByEmail($email);
 
@@ -311,10 +331,11 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD, sendPasswordResetEmail
-    * @param void       :
-    * @return void      : Send an email to the $user with reset instructions
-    */
+    /**
+     * METHOD, sendPasswordResetEmail
+     * @param void       :
+     * @return void      : Send an email to the $user with reset instructions
+     */
     protected function sendPasswordResetEmail() {
         $url = 'http://' . $_SERVER['HTTP_HOST'] . '/password/reset/' . $this->password_reset_hash;
 
@@ -335,10 +356,11 @@ class User extends \Core\Model {
     }
 
 
-    /* METHOD, startPasswordReset
-    * @param void       :
-    * @return boolean   : Does the statement execute?
-    */
+    /**
+     * METHOD, startPasswordReset
+     * @param void       :
+     * @return boolean   : Does the statement execute?
+     */
     protected function startPasswordReset() {
         //Generate a new Token hash and expiry date
         $token = new Token();
@@ -363,11 +385,71 @@ class User extends \Core\Model {
         return $stmt->execute();
     }
 
+    /**
+     * METHOD: updateUserProfile
+     * @param array     : $data Data from the Profile/edit <form>
+     * @return boolean  : True if valid update, false otherwise
+     */
+    public function updateUserProfile($data) {
 
-    /* METHOD: validate
-    *   @param void     :
-    *   @return void    :   Populate the errors[] array of the calling User object as needed
-    */
+        // Get the form values and assign to the User object
+        $this->user_name = $data['user_name'];
+        $this->user_email = $data['user_email'];
+        
+        // Only validate/update the password if it was supplied
+        if ($data['password'] != '') {
+            $this->password = $data['password'];
+        }
+
+        $this->validate();
+
+        if ( empty($this->errors) ) {
+
+            // No errors here, so start the query to Update the User record
+            $sql = "UPDATE users
+                SET user_name = :user_name,
+                    user_email = :user_email";
+            
+            // Check whether the password was set by POST
+            if ( isset($this->password) ) {
+                
+                // If set, then add the password to the SQL query
+                $sql .= ", user_password_hash = :password_hash";
+
+            }
+
+            // Finish the SQL statement   
+            $sql .= "\nWHERE user_id = :user_id";
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            // Bind values
+            $stmt->bindValue(':user_name',$this->user_name,PDO::PARAM_STR);
+            $stmt->bindValue(':user_email',$this->user_email,PDO::PARAM_STR);
+            $stmt->bindValue(':user_id',$this->user_id,PDO::PARAM_INT);
+
+            // Only hash and bind the password hash if set
+            if ( isset($this->password) ) {
+                
+                $password_hash = password_hash($this->password,PASSWORD_DEFAULT);
+
+                $stmt->bindValue(':password_hash',$password_hash,PDO::PARAM_STR);
+
+            }
+    
+            return $stmt->execute();
+        }
+
+        // If you get here, then there was a validation error
+        return false;
+    }
+
+    /**
+     * METHOD: validate
+     * @param void     :
+     * @return void    :   Populate the errors[] array of the calling User object as needed
+     */
     public function validate() {
         /* Validate the name */
         if ($this->user_name == '') {
@@ -384,19 +466,22 @@ class User extends \Core\Model {
             $this->errors[] = 'That email is already taken.';
         }
 
-        /* Check password length */
-        if (strlen($this->password) < 6) {
-            $this->errors[] = 'Your password must be at least 6 characters in length.';
-        }
+        // Password validation (only if set)
+        if (isset($this->password)) {
+             /* Check password length */
+            if (strlen($this->password) < 6) {
+                $this->errors[] = 'Your password must be at least 6 characters in length.';
+            }
 
-        /* Check for at least one letter (amongst any number of any other character, including none) */
-        if (preg_match('/.*[a-z]+.*/i',$this->password) == 0) {
-            $this->errors[] = 'There must be at least one letter in your password (a-z or A-Z).';
-        }
+            /* Check for at least one letter (amongst any number of any other character, including none) */
+            if (preg_match('/.*[a-z]+.*/i',$this->password) == 0) {
+                $this->errors[] = 'There must be at least one letter in your password (a-z or A-Z).';
+            }
 
-        /* Check for at least one number */
-        if (preg_match('/.*\d+.*/',$this->password) == 0) {
-            $this->errors[] = 'There must be at least one digit in your password.';
+            /* Check for at least one number */
+            if (preg_match('/.*\d+.*/',$this->password) == 0) {
+                $this->errors[] = 'There must be at least one digit in your password.';
+            }
         }
     }
 }
