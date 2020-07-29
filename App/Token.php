@@ -7,13 +7,16 @@ namespace App;
 */
 class Token {
 
-    /* Variables */
-    protected $token;//@var array
+    /**
+     * @var array 
+     */
+    protected $token;
 
-    /* MAGIC METHOD: __construct
-    *   @param void     :
-    *   @return void    :   Run this code when a new instance of Token is created
-    */
+    /**
+     * MAGIC METHOD: __construct
+     * @param void     :
+     * @return void    : Run this code when a new instance of Token is created
+     */
     public function __construct($token_value = null)//optional argument
     {
         if ($token_value) {
@@ -25,18 +28,20 @@ class Token {
         }
     }
 
-    /* METHOD: getHash
-    *   @param void     :
-    *   @return string  :   Return the hashed value of the token
-    */
+    /**
+     * METHOD: getHash
+     * @param void     :
+     * @return string  : Return the hashed value of the token
+     */
     public function getHash() {
         return hash_hmac('sha256',$this->token,\App\Config::HASH_KEY);//sha256 = 64 chars
     }
 
-    /* METHOD: getValue
-    *   @param void     :
-    *   @return string  :   Return the current string saved at the $token index of the calling Token object
-    */
+    /**
+     * METHOD: getValue
+     * @param void     :
+     * @return string  : Return the current string saved at the $token index of the calling Token object
+     */
     public function getValue() {
         return $this->token;
     }
