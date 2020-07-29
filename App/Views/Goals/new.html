@@ -10,8 +10,11 @@
 {% if current_user %}
 
     <form id="newGoal">
-        <label for="goalTitle">Title</label>
-        <input name="goalTitle" id="goalTitle" type="text">
+        <div class="form-group">
+            <label for="goalTitle">Title</label>
+            <input name="goalTitle" class="form-control" id="goalTitle" type="text">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
     
 {% else %}
