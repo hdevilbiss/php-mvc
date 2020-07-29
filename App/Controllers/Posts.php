@@ -11,13 +11,9 @@ class Posts extends \Core\Controller {
     }
     public function editAction() {
         echo 'Hello from the edit action in the Posts controller!';
-        echo '<p>Route parameters: <pre>' . htmlspecialchars(print_r($this->route_params,true)) . '</pre></p>';
-        $id = $this->route_params['id'];
-        echo $id;
     }
     public function indexAction() {
-        echo '<p>Query string parameters:<pre>' . htmlspecialchars(print_r($_GET,true)) . '</pre></p>';
-        
+       
         $posts = Post::getAll();
         
         View::renderTemplate('Posts/index.html',[
