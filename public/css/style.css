@@ -1,15 +1,15 @@
-.alert {
-    border: 1px solid #ccc;
-    padding: 6px;
-}
-.alert-info {
-    background-color: #d9edf7;
-}
-.alert-success {
+.login {
     background-color: #dff0d8;
+    border: 0.5px solid #ccc;
+    border-radius: 5px;
 }
-.alert-warning {
-    background-color: #fcf8e3;
+.logout {
+    background-color: #d9edf7;
+    border: 0.5px solid #ccc;
+    border-radius: 5px;
+}
+.navbar {
+    border-bottom: 0.5px solid #CCC;
 }
 footer {
     padding-top:20px;

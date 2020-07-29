@@ -36,15 +36,25 @@ class Password extends \Core\Controller {
     }
 
 
-    /* METHOD, requestResetAction
-    * @param void   :
-    * @return void  : Send the password reset link to the supplied email from POST
-    */
+    /**
+     * METHOD, requestResetAction
+     * @param void   :
+     * @return void  : Send the password reset link to the $_POST email, set a Flash message, and redirect to the confirmation page
+     */
     public function requestResetAction() {
         User::sendPasswordReset($_POST['email']);
 
         Flash::addMessage('Reset request received.');
 
+        $this->redirect('/password/reset-confirmation');
+    }
+    
+    /**
+     * METHOD, resetConfirmation
+     * @param void  :
+     * @return void : Render the confirmation template
+     */
+    public function resetConfirmation() {
         View::renderTemplate('Password/reset_confirmation.html');
     }
 

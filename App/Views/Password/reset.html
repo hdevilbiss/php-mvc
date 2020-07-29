@@ -49,11 +49,11 @@
         <!-- Reset Token -->
         <input type="hidden" name="token" value="{{ token }}">
 
-        <div>
+        <div class="form-group">
             <label for="inputPassword">Password: </label>
-            <input type="password" id="inputPassword" name="password" placeholder="Password" required />
+            <input type="password" class="form-control" id="inputPassword" name="password" placeholder="Password" required />
         </div>
         
-        <button type="submit">Set New Password</button>
+        <button type="submit" class="btn btn-primary">Set New Password</button>
     </form>
 {% endblock %}
