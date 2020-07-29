@@ -12,24 +12,57 @@
         <link rel="stylesheet" href="/css/style.css" />
     </head>
     <body>
+        <!-- Navigation Bar -->
+        <nav class="navbar navbar-expand-md navbar-light bg-light">
+            <!-- Logo -->
+            <a class="navbar-brand" href="/">MVC</a>
+            <!-- Hamburger Toggler -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <!-- Left-side Links -->
+                <ul class="navbar-nav">
+                    <!-- Home Link -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/">Home</a>
+                        </li>
+                        <!-- Public Links -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="/posts/index">Posts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/users/index">Admin</a>
+                        </li>
+                </ul>
+                <!-- Right-side Links -->
+                <ul class="nav navbar-nav ml-auto">
+                    <!-- Private Links -->
+                    {% if current_user %}
+                    <li class="nav-item">
+                        <a  class="nav-link" href="/profile/index">Your Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/goals/index">Your Goals</a>
+                    </li>    
+                    <li class="nav-item logout">
+                            <a class="nav-link" href="/logout">Log out</a>
+                    </li>   
+                    {% else %}
+                    <!-- Public Links -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/signup/new">Sign Up</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link login" href="/login/new">Login</a>
+                    </li>
+                    {% endif %}
+                </ul>  
+            </div> <!-- close navbar div -->
+          </nav>
 
         <div class="container">
-        
-            <nav>
-                <ul>
-                    <li><a href="/">Home</a></li> 
-                    {% if current_user %}
-                        <li><a href="/logout">Log out</a></li>
-                        <li><a href="/profile/index">Your Profile</a></li>
-                        <li><a href="/goals/index">Your Goals</a></li>
-                    {% else %}
-                        <li><a href="/signup/new">Sign Up</a></li>
-                        <li><a href="/login/new">Login</a></li>
-                    {% endif %}
-                    <li><a href="/posts/index">Posts</a></li>
-                    <li><a href="/admin/users/index">Admin</a></li>      
-                </ul>
-            </nav>
 
         {% for message in flash_messages %}
             <div class="alert alert-{{ message.type }}">
