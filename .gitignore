@@ -5,3 +5,4 @@
 composer.phar
 /vendor/
 /App/Config.php
+*.cmd
