@@ -8,9 +8,9 @@ use PHPUnit\Framework\TestCase;
 class ExampleTest extends TestCase {
     
     /**
-     * ASSERTION: AddingTwoPlusTwoResultsInFour
+     * @test
      */
-    public function testAddingTwoPlusTwoResultsInFour() {
+    public function adding_two_plus_two_equals_four() {
         
         /**
          * Call the assertEquals method, which is a TestCase parent method, on the current object
