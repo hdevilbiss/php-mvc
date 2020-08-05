@@ -6,7 +6,7 @@ class UserTest extends TestCase {
      * @test
      */
     public function returns_full_name() {
-        require 'themes/User.php';
+        
         $user = new User;
         $user->first_name = "Teresa";
         $user->last_name = "Green";
