@@ -6,3 +6,4 @@ composer.phar
 /vendor/
 /App/Config.php
 *.cmd
+phpunit*
