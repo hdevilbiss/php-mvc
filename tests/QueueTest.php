@@ -2,42 +2,54 @@
 use PHPUnit\Framework\TestCase;
 
 class QueueTest extends TestCase {
+    
+    /**
+     * Test Fixture: set_up
+     */
+    protected function set_up(): void {
+        // This empty Queue instance is called the test "fixture"
+        $this->queue = new Queue;
+    }
+
+    /**
+     * Test Fixture: tear_down
+     */
+    protected function tear_down() : void {
+        
+        //Use unset if you have memory constraints on your system
+        unset($this->queue);
+
+    }
+    
     /**
      * @test whether the count in an empty queue returns 0
      */
     public function new_queue_is_empty() {
-        //This main test is called a producer because other tests depend on it
-        
-        $queue = new Queue;
-
-        $this->assertEquals(0,$queue->getCount());
-
-        return $queue;
+       
+        $this->assertEquals(0,$this->queue->getCount());
     }
 
     /**
      * @test whether an $item was added to the queue
-     * @depends new_queue_is_empty
      */
-    public function an_item_is_added_to_the_queue(Queue $queue) {
-        // This "dependent" test is called a consumer
-
-        $queue->push('green');
-        $this->assertEquals(1,$queue->getCount());
-
-        return $queue;
+    public function an_item_is_added_to_the_queue() {
+        
+        $this->queue->push('green');
+        
+        $this->assertEquals(1,$this->queue->getCount());
     }
 
     /**
      * @test whether an $item was removed from the queue
-     * @depends an_item_is_added_to_the_queue
      */
-    public function an_item_is_removed_from_the_queue(Queue $queue) {
+    public function an_item_is_removed_from_the_queue() {
 
-        $item = $queue->pop();
-
-        $this->assertEquals(0,$queue->getCount());
-
+        $this->queue->push('green');
+        
+        $item = $this->queue->pop();
+        
+        $this->assertEquals(0,$this->queue->getCount());
+        
         $this->assertEquals('green',$item);
     }
 }
