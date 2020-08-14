@@ -3,10 +3,12 @@ use PHPUnit\Framework\TestCase;
 
 class QueueTest extends TestCase {
     
+    protected $queue;
+
     /**
      * Test Fixture: set_up
      */
-    protected function set_up(): void {
+    protected function setUp(): void {
         // This empty Queue instance is called the test "fixture"
         $this->queue = new Queue;
     }
@@ -14,7 +16,7 @@ class QueueTest extends TestCase {
     /**
      * Test Fixture: tear_down
      */
-    protected function tear_down() : void {
+    protected function tearDown() : void {
         
         //Use unset if you have memory constraints on your system
         unset($this->queue);
@@ -51,5 +53,14 @@ class QueueTest extends TestCase {
         $this->assertEquals(0,$this->queue->getCount());
         
         $this->assertEquals('green',$item);
+    }
+
+    /**
+     * @test
+     */
+    public function item_is_removed_from_front_of_queue() {
+        $this->queue->push("first");
+        $this->queue->push("second");
+        $this->assertEquals("first",$this->queue->pop());
     }
 }
