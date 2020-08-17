@@ -11,6 +11,12 @@ class Queue {
     protected $items = [];
 
     /**
+     * MAX_ITEMS in the $queue
+     * @var integer
+     */
+    public const MAX_ITEMS = 5;
+
+    /**
      * METHOD: clear
      * @param void
      * @return void : Clear the $items array of the active object
@@ -43,6 +49,9 @@ class Queue {
      * @return void : Add the $item to the $items array
      */
     public function push($item) {
+        if ($this->getCount() == static::MAX_ITEMS) {
+            throw new QueueException("Queue is full");
+        }
         $this->items[] = $item;
     }  
 }
