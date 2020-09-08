@@ -10,6 +10,6 @@ class MockTest extends TestCase {
 
         $result = $mock->sendMessage('dave@example.com','Hello');
 
-        var_dump($result);
+        $this->assertTrue($result);
     }
 }
