@@ -40,7 +40,10 @@ class UserTest extends TestCase {
     public function testCannotNotifyUserWithNoEmail() {
         $user = new User;
 
-        // If setMethods has no arguments or receives null, then none of the methods will be stubbed: original code will execute. You can also pass in array containing the names of the methods that will be stubbed.
+        /**
+         * If setMethods has no arguments or receives null, then none of the methods will be stubbed: original code will execute. You can also pass in array containing the names of the methods that will be stubbed.
+         * Note that ...getMockBuilder...getMock is equivalent to ...createMock.
+         */
         $mock_mailer = $this->getMockBuilder(Mailer::class)->setMethods(null)->getMock();
 
         //Inject dependency into User object
