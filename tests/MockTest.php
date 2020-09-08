@@ -4,9 +4,11 @@ use PHPUnit\Framework\TestCase;
 
 class MockTest extends TestCase {
     public function testMock() {
-        $mailer = new Mailer;
+        $mock = $this->createMock(Mailer::class);
 
-        $result = $mailer->sendMessage('dave@example.com','Hello');
+        $mock->method('sendMessage')->willReturn(true);
+
+        $result = $mock->sendMessage('dave@example.com','Hello');
 
         var_dump($result);
     }
