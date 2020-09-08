@@ -2,10 +2,8 @@
 use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase {
-    /**
-     * @test
-     */
-    public function returns_full_name() {
+
+    public function testReturnsFullName() {
         
         $user = new User;
         $user->first_name = "Teresa";
@@ -14,10 +12,7 @@ class UserTest extends TestCase {
         $this->assertEquals('Teresa Green',$user->getFullName());
     }
 
-    /**
-     * @test
-     */
-    public function full_name_is_empty_by_default() {
+    public function testFullNameIsEmptyByDefault() {
         $user = new User;
         $this->assertEquals('',$user->getFullName());
     }
@@ -40,6 +35,23 @@ class UserTest extends TestCase {
 
         $user->email = 'dave@example.com';
         $this->assertTrue($user->notify("Hello"));
+    }
+
+    public function testCannotNotifyUserWithNoEmail() {
+        $user = new User;
+
+        // If setMethods has no arguments or receives null, then none of the methods will be stubbed: original code will execute. You can also pass in array containing the names of the methods that will be stubbed.
+        $mock_mailer = $this->getMockBuilder(Mailer::class)->setMethods(null)->getMock();
+
+        //Inject dependency into User object
+        $user->setMailer($mock_mailer);
+
+
+        // Assertion: Expect Exception from notify
+        $this->expectException(Exception::class);
+
+        //Call notify method
+        $user->notify("Hello");
     }
 }
 ?>
