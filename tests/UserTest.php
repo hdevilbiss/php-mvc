@@ -25,8 +25,16 @@ class UserTest extends TestCase {
     public function testNotificationIsSent() {
         $user = new User;
 
+        // Test Double: Mocked Class
         $mock_mailer = $this->createMock(Mailer::class);
-        $mock_mailer->method('sendMessage')->willReturn(true);
+
+        /**
+         * Stubbed Method Assertions:
+         * sendMessage method only gets called once
+         * sendMessage arguments are equal to some hard-code values
+         * sendMessage returns true
+         */ 
+        $mock_mailer->expects($this->once())->method('sendMessage')->with($this->equalTo('dave@example.com'),$this->equalTo('Hello'))->willReturn(true);
 
         $user->setMailer($mock_mailer);
 
