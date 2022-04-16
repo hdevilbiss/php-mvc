@@ -1,5 +1,5 @@
 # Model, View, Controller Framework: MVC
-Following along the MVC courses on Udemy.com by Dave Hollingworth [daveh.io](daveh.io).
+Following along the MVC courses on Udemy.com by Dave Hollingworth [daveh.io](https://daveh.io).
 
 ## How to use it
 1. Git clone the public HTTPS. Remove the .git directory if you want a standalone project. Run ```git init``` to create your own git repo.
